@@ -8,7 +8,7 @@ class LineChart extends Component{
     this.data = props.chartState
   }
 
-  drawLine (data) {
+  drawLine (data, anotherData) {
     const padding = this.data.padding
     const width = this.data.width
     const pieHeight = this.data.pieHeight
@@ -25,6 +25,7 @@ class LineChart extends Component{
     let xScale = d3.scaleBand()
                     .domain(['1月', '2月', '3月', '4月', '5月', '6月'])
                     .range([0, width - padding.left - padding.right])
+
     let yScale = d3.scaleLinear()
                     .domain([d3.min(data), d3.max(data)])
                     .range([pieHeight - padding.top - padding.bottom, 0]) // 值域取反
@@ -55,10 +56,18 @@ class LineChart extends Component{
       })
       .curve(d3.curveBasis)
 
-    // 绘制折现路径
+    // 绘制折线路径
     svg.append('path')
       .attr('d', line(data))
       .attr('stroke', 'red')
+      .attr('stroke-width', '4px')
+      .attr('fill', 'none')  // 设置折线与直线之间区域的填充颜色
+      .attr('class', 'line') // 添加动画
+
+    // 绘制折线路径
+    svg.append('path')
+      .attr('d', line(anotherData))
+      .attr('stroke', 'green')
       .attr('stroke-width', '4px')
       .attr('fill', 'none')  // 设置折线与直线之间区域的填充颜色
       .attr('class', 'line') // 添加动画
@@ -67,13 +76,13 @@ class LineChart extends Component{
 
   // 这里必须是箭头函数，不能是function声明，否则不能正确绑定this的指向
   changeData = () => {
-    this.props.chartState.changeLineData()
+    this.props.chartState.changeLineData(this.data.lineData, this.data.lineData2)
     d3.select("svg").remove()
-    this.drawLine(this.data.lineData)
+    this.drawLine(this.data.lineData, this.data.lineData2)
   }
 
   componentDidMount() {
-    this.drawLine(this.data.lineData)
+    this.drawLine(this.data.lineData, this.data.lineData2)
   }
 
   render() {
