@@ -1,9 +1,9 @@
 import {action, observable} from "mobx";
 
 class chartState {
-  width = 1000
+  width = 700
   height = 500
-  pieHeight = 1000
+  pieHeight = 700
   padding = { top:20, right:20, bottom:100, left:100 }
 
   @observable dataSet = [50,43,120,87,99,167,142]
@@ -251,10 +251,51 @@ class chartState {
     {source: 8, target: 9, relation: '两口子'}
   ]
 
+  // 折线图数据
+  lineData = [10, 30, 25, 12, 43, 25, 18, 36]
+
+  // 区域图数据
+  areaData = [10, 30, 25, 12, 43, 25, 18, 12]
+
+  // 捆图数据
+  cities = {
+    name: "",
+    children:[
+      {name: "北京"},{name: "上海"},{name: "杭州"},
+      {name: "广州"},{name: "桂林"},{name: "昆明"},
+      {name: "成都"},{name: "西安"},{name: "太原"}
+    ]
+  }
+  railway = [
+    {source: "北京", target: "上海"},
+    {source: "北京", target: "广州"},
+    {source: "北京", target: "杭州"},
+    {source: "北京", target: "西安"},
+    {source: "北京", target: "成都"},
+    {source: "北京", target: "太原"},
+    {source: "北京", target: "桂林"},
+    {source: "北京", target: "昆明"},
+    {source: "北京", target: "成都"},
+    {source: "上海", target: "杭州"},
+    {source: "昆明", target: "成都"},
+    {source: "西安", target: "太原"}
+  ]
 
   @action.bound changeData = () => {
     this.dataSet.shift()
     this.dataSet.push(Math.floor(Math.random() * 100))
+  }
+
+  @action.bound changeLineData = () => {
+    this.lineData.sort((a ,b) => {
+      return a - b
+    })
+  }
+
+  @action.bound changeAreaData = () => {
+    this.areaData.sort((a ,b) => {
+      return a - b
+    })
   }
 
 }

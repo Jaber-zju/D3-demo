@@ -1,0 +1,14 @@
+ /*折线动画*/
+.line{
+    stroke-dasharray: 2000;             /* //设置虚线的间隔长度 */
+    stroke-dashoffset: 2000;             /* 设置线段偏移长度 */
+    animation: dash 2s forwards;
+}
+@keyframes dash {
+    0%{
+        stroke-dashoffset:2000;
+    }
+    100%{
+        stroke-dashoffset: 0;
+    }
+}

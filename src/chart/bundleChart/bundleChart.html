@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>捆图</title>
+	</head>
+	<body>
+		<script src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script>
+		<script type="text/javascript">
+			    // 城市列表
+			    const cities = {
+			        name: '',
+			        children: [
+			            {name: "北京"},{name: "昆明"},
+			            {name: "成都"},{name: "西安"},
+			            {name: "上海"},{name: "杭州"},
+			            {name: "广州"},{name: "桂林"},
+			            {name: "太原"},{name: "美国"}
+			        ]
+			    };
+			 
+			    // 航班路线
+			    const railway = [
+			        {source: "美国", target: "上海"},
+			        {source: "北京", target: "上海"},
+			        {source: "北京", target: "广州"},
+			        {source: "北京", target: "杭州"},
+			        {source: "美国", target: "杭州"},
+			        {source: "北京", target: "西安"},
+			        {source: "北京", target: "成都"},
+			        {source: "美国", target: "北京"},
+			        {source: "北京", target: "太原"},
+			        {source: "北京", target: "桂林"},
+			        {source: "北京", target: "昆明"},
+			        {source: "北京", target: "成都"},
+			        {source: "上海", target: "杭州"},
+			        {source: "昆明", target: "成都"},
+			        {source: "西安", target: "太原"}
+			    ];
+
+			    // 画布尺寸
+				const width = 500;
+				const height = 500;
+			 
+				// 需要一个方法将航班路线数据跟城市列表数据对接起来
+				let map = function ( nodes, links ){
+					let hash = [];
+					for(let i = 0; i < nodes.length; i++){
+						hash[nodes[i].name] = nodes[i];
+					}
+					// hash['北京'] = {name: "北京"}; ...
+					let resultLinks = [];
+					for(let i = 0; i < links.length; i++){
+						resultLinks.push({
+							source: hash[ links[i].source ],
+							target: hash[ links[i].target ]
+						});
+					}
+					return resultLinks;
+				}
+			 
+				// 分别创建一个集群图布局和一个捆图布局，360表示角度，width/2 - 50 表示捆图圆半径
+				let cluster = d3.layout.cluster().size([360, width/2 - 50])
+				let bundle = d3.layout.bundle();
+			 
+				let nodes = cluster.nodes(cities);
+				let oLinks = map(nodes, railway);
+				let links = bundle(oLinks);
+
+				let svg = d3.select('body').append('svg')
+				  .attr('width',width)
+				  .attr('height',height)
+				  
+				let line = d3.svg.line.radial()
+					.interpolate("bundle") //在line.interpolate()所预定义的插值模式中，有一种就叫做bundle，正是为捆图准备的。
+					.radius(function(d) { return d.y; })
+					.angle(function(d) { return d.x / 360 * 2 * Math.PI; })
+
+				let gBundle = svg.append("g")
+					.attr("transform", "translate(" + (width/2) + "," + (height/2) + ")");
+					
+				let color = d3.scale.category20c();
+				
+				let link = gBundle.selectAll(".link")
+					.data(links)
+					.enter()
+					.append("path")
+					.classed('link',true)
+					.style({
+						'fill': 'none',
+						'stroke': 'rgba(0,0,0,0.5)',
+						'stroke-width': 2
+					})
+					.attr("d", line);
+
+				// console.log(link)
+					
+				let node = gBundle.selectAll('.node')
+					.data( nodes.filter(function(d) { return !d.children; }) ) //排除数据中最顶层的空数据
+					.enter()
+					.append('g')
+					.classed('node',true)
+					.attr("transform", function(d) {
+						return "rotate(" + (d.x- 90) + ") translate("+ d.y + ")"; //这里为什么是d.x- 90，我也还不明白，暂先用着，后续再深入了解
+					})
+					.on('mouseover', function (d, i) {
+						const city = d.name
+						console.log(city)
+						svg.selectAll('.link')[0]
+							.filter(function(item) {
+							  item.__data__.filter(function(item){ item.name !== city })
+							})
+							.transition()
+							.duration(1000)
+							.style('opacity', 0)
+					})
+					
+				node.append('circle')
+					.attr('r',20)
+					.attr('fill', function(d,i){
+						return color(i);
+					})
+			 
+				node.append('text')
+					.attr('dy','0.2em')
+					.style("text-anchor", "middle")
+					.text(function(d,i){
+						return d.name;
+					})
+		</script>
+	</body>
+</html>

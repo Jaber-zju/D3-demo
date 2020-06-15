@@ -1,8 +1,8 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
-// import BarChart from './barChart';
-// import BarChart_2 from './barChart_2.jsx';
+import BarChart from './chart/barChart/barChart';
+import BarChart_2 from './chart/barChart/barChart_2';
 import Pie_chart from "./chart/pieChart/pie_chart";
 import Force_chart from "./chart/forceChart/force_chart";
 import Pack_chart from "./chart/packChart/pack_chart";
@@ -15,6 +15,8 @@ import StackChart from "./chart/stackChart/stackChart";
 import TreeMapChart from "./chart/treeMapChart/treeMapChart";
 import ForceChart from "./chart/forceChart/forceChart";
 import ChordChart from "./chart/chordChart/chordChart";
+import LineChart from "./chart/lineChart/lineChart";
+import AreaChart from "./chart/areaChart/areaChart";
 
 import * as serviceWorker from './serviceWorker';
 import chartState from './store/store'
@@ -22,18 +24,21 @@ import chartState from './store/store'
 ReactDOM.render(
   <React.StrictMode>
     {/*<BarChart_2 chartState={chartState}/>*/}
+    {/*<BarChart chartState={chartState}/>*/}
     {/*<Force_chart chartState={chartState}/>*/}
     {/*<Pack_chart chartState={chartState}/>*/}
     {/*<Tree_chart chartState={chartState}/>*/}
     {/*<Cluster_chart chartState={chartState}/>*/}
-    {/*<CircleClusteChart chartState={chartState}/>*/}
+    <CircleClusteChart chartState={chartState}/>
     {/*<Pie_chart chartState={chartState}/>*/}
     {/*<PartitionChart chartState={chartState}/>*/}
     {/*<PartitionCircleChart chartState={chartState}/>*/}
     {/*<StackChart chartState={chartState}/>*/}
     {/*<ChordChart chartState={chartState}/>*/}
     {/*<TreeMapChart chartState={chartState}/>*/}
-    <ForceChart chartState={chartState}/>
+    {/*<ForceChart chartState={chartState}/>*/}
+    {/*<LineChart chartState={chartState}/>*/}
+    {/*<AreaChart chartState={chartState}/>*/}
   </React.StrictMode>,
   document.getElementById('root')
 );
